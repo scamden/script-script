@@ -1,9 +1,3 @@
-{Abb|full}
-
-[0-9]+[[\.|\:]+[0-9]+]
-
-# Abb.
-
 Gen
 Exod
 Lev
@@ -83,8 +77,6 @@ T. Levi
 T. Reu.
 T. Ab.
 T. Mos.
-
-# Full
 
 Genesis
 Exodus
