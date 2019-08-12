@@ -1,5 +1,5 @@
 {
-  "name": "@creditiq/base",
+  "name": "@creditiq/script-script",
   "version": "1.0.1",
   "main": "dist/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creditiq/base.git"
+    "url": "git+https://github.com/creditiq/script-script"
   },
   "dependencies": {},
   "devDependencies": {
@@ -51,5 +51,8 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "ciq": {
+    "upstream": "git@github.com:creditiq/base.git"
   }
 }
