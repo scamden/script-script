@@ -4,11 +4,12 @@ import * as _ from 'lodash';
 //<p class="s19" style="padding-top: 4pt;padding-left: 40pt;text-indent: 0pt;text-align: left;">102 Introduction</p>
 const SECTIONS_REG_EX = /<p class="s19" style=".*?">.*?([0-9]+).*?<\/p>/g
 const targets = readTargets();
-const locationRegExStr = '(\\d+|\\d\\:\\d|, |-|–|—|−)' // please note that the hyphens are actually different characters
+const hyphensOrComma = `\\, ?|-|–|—|−`;
+const locationRegExStr = `(\\d+[:\.]\\d+|\\d+|${hyphensOrComma})+` // please note that the hyphens are actually different characters
 
 // Gen 1, 4, 7 // Gen 1:4, 5:3 // Gen 1:4, 5 //Gen 1, 5:3
-const refRegExp = new RegExp(`(${targets.map(t => escapeRegex(t)).join('|')} ${locationRegExStr}+)`);
-
+const refRegExp = new RegExp(`(${targets.map(t => escapeRegex(t)).join('|')}) (${locationRegExStr})( \\[${locationRegExStr}\\])?`, 'g');
+console.log(refRegExp);
 type PTagInfo = { pTag: string, pageNumber: string };
 
 
@@ -22,12 +23,14 @@ export function readAndOutputScriptRefs(fileName: string = './src/input.html') {
     const pageTextRegExp = new RegExp(`${escapeRegex(pTag)}((.|\\n)*)(${nextPTagInfo && escapeRegex(nextPTagInfo.pTag) || ''})`);
     const pageTextMatch = fileText.match(pageTextRegExp);
     const pageText = pageTextMatch && pageTextMatch[1];
+    console.log('\n', pageNumber, '\n');
     const refs = findRefsInString(pageText);
     return {
       ...accum,
       [pageNumber]: refs
     }
   }, {} as Record<string, string[]>)
+  console.log('Done');
   console.log(JSON.stringify(pageTexts, null, 2));
 }
 
@@ -36,9 +39,7 @@ function readPTagInfos(fileText: string) {
   let pTagInfos: PTagInfo[] = [];
   while (match) {
     const pTag = match && match[0];
-    console.log(pTag);
     const pageNumber = match && match[1];
-    console.log(pageNumber);
     pTagInfos.push({
       pTag,
       pageNumber,
@@ -50,16 +51,18 @@ function readPTagInfos(fileText: string) {
 
 function findRefsInString(text: string | null): string[] {
   let refs: string[] = [];
-  let match = text && text.match(refRegExp);
+  let match = text && refRegExp.exec(text);
   while (match && text) {
-    refs.push(match[1]);
-    text.match(refRegExp)
+    const ref = match[0];
+    console.log(ref)
+    refs.push(ref.replace(new RegExp(`(${hyphensOrComma})$`), ''));
+    match = refRegExp.exec(text)
   }
   return refs;
 }
 
 function readTargets() {
-  const fileText = fs.readFileSync(`${__dirname}/targets.md`).toString();
+  const fileText = fs.readFileSync(`${__dirname}/../src/targets.md`).toString();
   return _.compact(fileText.split('\n'))
 }
 
