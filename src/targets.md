@@ -72,8 +72,16 @@ Jdt
 Wis
 Sir
 Bar
-Macc
-Esd
+1 Macc
+2 Macc
+3 Macc
+4 Macc
+5 Macc
+6 Macc
+7 Macc
+8 Macc
+1 Esd
+2 Esd
 
 Bar.
 En.
@@ -161,8 +169,16 @@ Wisdom of Solomon
 Sirach
 Ecclesiasticus
 Baruch
-Maccabees
-Esdras
+1 Maccabees
+2 Maccabees
+3 Maccabees
+4 Maccabees
+5 Maccabees
+6 Maccabees
+7 Maccabees
+8 Maccabees
+1 Esdras
+2 Esdras
 
 Baruch
 Enoch
