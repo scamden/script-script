@@ -41,7 +41,8 @@ Luke
 John
 Acts
 Rom
-1–2 Cor
+1 Cor
+2 Cor
 Gal
 Eph
 Phil
