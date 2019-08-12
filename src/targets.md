@@ -6,14 +6,18 @@ Deut
 Josh
 Judg
 Ruth
-1–2 Sam
-1–2 Kgs
-1–2 Chr
+1 Sam
+2 Sam
+1 Kgs
+2 Kgs
+1 Chr
+2 Chr
 Ezra
 Neh
 Esth
 Job
-Ps/Pss
+Ps
+Pss
 Prov
 Ecc
 Song
@@ -47,14 +51,19 @@ Gal
 Eph
 Phil
 Col
-1–2 Thess
-1–2 Tim
+1 Thess
+2 Thess
+1 Tim
+2 Tim
 Titus
 Phlm
 Heb
 Jas
-1–2 Pet
-1–2–3 John
+1 Pet
+2 Pet
+1 John
+2 John
+3 John
 Jude
 Rev
 
@@ -65,7 +74,6 @@ Sir
 Bar
 Macc
 Esd
-
 
 Bar.
 En.
@@ -87,9 +95,12 @@ Deuteronomy
 Joshua
 Judges
 Ruth
-1–2 Samuel
-1–2 Kings
-1–2 Chronicles
+1 Samuel
+2 Samuel
+1 Kings
+2 Kings
+1 Chronicles
+2 Chronicles
 Ezra
 Nehemiah
 Esther
@@ -122,26 +133,33 @@ Luke
 John
 Acts
 Romans
-1–2 Corinthians
+1 Corinthians
+2 Corinthians
 Galatians
 Ephesians
 Philippians
 Colossians
-1–2 Thessalonians
-1–2 Timothy
+1 Thessalonians
+1 Thessalonians
+1 Timothy
+2 Timothy
 Titus
 Philemon
 Hebrews
 James
-1–2 Peter
-1–2–3 John
+1 Peter
+2 Peter
+1 John
+2 John
+3 John
 Jude
 Revelation
 
 Tobit
 Judith
 Wisdom of Solomon
-Sirach/Ecclesiasticus
+Sirach
+Ecclesiasticus
 Baruch
 Maccabees
 Esdras
