@@ -1,100 +1,3 @@
-Gen
-Exod
-Lev
-Num
-Deut
-Josh
-Judg
-Ruth
-1 Sam
-2 Sam
-1 Kgs
-2 Kgs
-1 Chr
-2 Chr
-Ezra
-Neh
-Esth
-Job
-Ps
-Pss
-Prov
-Ecc
-Song
-Isa
-Jer
-Lam
-Ezek
-Dan
-Hos
-Joel
-Amos
-Obad
-Jonah
-Mic
-Nah
-Hab
-Zeph
-Hag
-Zech
-Mal
-
-Matt
-Mark
-Luke
-John
-Acts
-Rom
-1 Cor
-2 Cor
-Gal
-Eph
-Phil
-Col
-1 Thess
-2 Thess
-1 Tim
-2 Tim
-Titus
-Phlm
-Heb
-Jas
-1 Pet
-2 Pet
-1 John
-2 John
-3 John
-Jude
-Rev
-
-Tob
-Jdt
-Wis
-Sir
-Bar
-1 Macc
-2 Macc
-3 Macc
-4 Macc
-5 Macc
-6 Macc
-7 Macc
-8 Macc
-1 Esd
-2 Esd
-
-Bar.
-En.
-Jub
-Sib. Or.
-T. Dan.
-T. Jos.
-T. Jud.
-T. Levi
-T. Reu.
-T. Ab.
-T. Mos.
-
 Genesis
 Exodus
 Leviticus
@@ -193,3 +96,100 @@ Testament of Levi
 Testament of Reuben
 Testament of Abraham
 Testament of Moses
+
+Gen
+Exod
+Lev
+Num
+Deut
+Josh
+Judg
+Ruth
+1 Sam
+2 Sam
+1 Kgs
+2 Kgs
+1 Chr
+2 Chr
+Ezra
+Neh
+Esth
+Job
+Ps
+Pss
+Prov
+Ecc
+Song
+Isa
+Jer
+Lam
+Ezek
+Dan
+Hos
+Joel
+Amos
+Obad
+Jonah
+Mic
+Nah
+Hab
+Zeph
+Hag
+Zech
+Mal
+
+Matt
+Mark
+Luke
+John
+Acts
+Rom
+1 Cor
+2 Cor
+Gal
+Eph
+Phil
+Col
+1 Thess
+2 Thess
+1 Tim
+2 Tim
+Titus
+Phlm
+Heb
+Jas
+1 Pet
+2 Pet
+1 John
+2 John
+3 John
+Jude
+Rev
+
+Tob
+Jdt
+Wis
+Sir
+Bar
+1 Macc
+2 Macc
+3 Macc
+4 Macc
+5 Macc
+6 Macc
+7 Macc
+8 Macc
+1 Esd
+2 Esd
+
+Bar.
+En.
+Jub
+Sib. Or.
+T. Dan.
+T. Jos.
+T. Jud.
+T. Levi
+T. Reu.
+T. Ab.
+T. Mos.
