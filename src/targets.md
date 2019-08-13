@@ -181,7 +181,9 @@ Baruch
 2 Esdras
 
 Baruch
-Enoch
+1 Enoch
+2 Enoch
+3 Enoch
 Jubilees
 Sibylline Oracles
 Testament of Dan
