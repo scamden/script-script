@@ -45,13 +45,9 @@ export function readRefsAndCombineWithPrevious(fileName: string = './src/input.h
               };
             }
             const alternate = alternates[idx];
-            const specs = parseSpecs(startLoc);
-            const endSpecs = endLoc ?
-              parseSpecs(endLoc) :
-              undefined;
-            const { relative, chVs: start } = getAbsoluteOrRelativeFromPrevious(previousChVs, specs);
-            const end = endSpecs ?
-              getAbsoluteOrRelativeFromPrevious(!relative ? start : previousChVs, endSpecs).chVs :
+            const { relative, chVs: start } = getAbsoluteOrRelativeFromPrevious(previousChVs, startLoc);
+            const end = endLoc ?
+              getAbsoluteOrRelativeFromPrevious(!relative ? start : previousChVs, endLoc).chVs :
               undefined;
             previousChVs = start;
             return {
@@ -180,10 +176,8 @@ function toSpecs(chVs?: ChapterVerse) {
 function compareSpecs(s1: Array<string | undefined>, s2: Array<string | undefined>): number {
   const first = s1[0];
   const second = s2[0];
-  if (first === '4:74:14' && second === '419') {
-    if (!first && !second) {
-      return 0;
-    }
+  if (!first && !second) {
+    return 0;
   }
   if (!first) {
     return -1;
@@ -209,8 +203,9 @@ function compareSpecs(s1: Array<string | undefined>, s2: Array<string | undefine
 
 function getAbsoluteOrRelativeFromPrevious(
   previousChVs: ChapterVerse | undefined,
-  specs: string[],
+  loc: string,
 ): { relative: boolean, chVs: ChapterVerse } {
+  const specs = parseSpecs(loc);
   const [s1, s2, s3] = specs;
   if (
     !previousChVs ||
@@ -230,11 +225,11 @@ function getAbsoluteOrRelativeFromPrevious(
   }
   return {
     relative: true,
-    chVs: evaluateLocationRelativeTo(previousChVs, specs)
+    chVs: evaluateLocationRelativeTo(previousChVs, specs, loc)
   };
 }
 
-function evaluateLocationRelativeTo(previousChVs: ChapterVerse, specs: string[]): ChapterVerse {
+function evaluateLocationRelativeTo(previousChVs: ChapterVerse, specs: string[], loc: string): ChapterVerse {
   const [s1, s2, s3] = specs;
   if (specs.length === 2) {
     return {
@@ -256,6 +251,11 @@ function evaluateLocationRelativeTo(previousChVs: ChapterVerse, specs: string[])
       verse: s1
     };
   } else {
-    throw new Error('HOOWWWW??? specs length 1 should be non relative');
+    console.warn(`HOOWWWW??? specs length 1 should be non relative, specs: ${specs}, loc: ${loc}`);
+    return {
+      ...previousChVs,
+      verse: s1,
+      note: s2,
+    };
   }
 }
