@@ -56,9 +56,7 @@ export function readRefsAndCombineWithPrevious(fileName: string = './src/input.h
             const end = endSpecs ?
               getAbsoluteOrRelativeFromPrevious(!relative ? start : previousChVs, endSpecs).chVs :
               undefined
-            if (!relative) {
-              previousChVs = start;
-            }
+            previousChVs = start;
             return {
               start,
               end,
@@ -86,8 +84,6 @@ export function readRefsAndCombineWithPrevious(fileName: string = './src/input.h
       })
     }
   }, {})
-  // return allRefs;
-  console.log(JSON.stringify(sortedAllRefs, null, 2))
 }
 
 function parseSpecs(loc: string): string[] {
@@ -112,7 +108,7 @@ function compareSpecs(s1: Array<string | undefined>, s2: Array<string | undefine
     return -1;
   }
   if (!second) {
-    return -1;
+    return 1;
   }
 
   try {
