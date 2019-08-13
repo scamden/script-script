@@ -15,18 +15,25 @@ const locationRegExStr = `(\\d+${specSeparator}\\d+|\\d+|${hyphensOrComma})+` //
 const refRegExp = new RegExp(`(${targets.map(t => escapeRegex(t)).join('|')})( (${locationRegExStr})( \\[${locationRegExStr}\\])?)`, 'g');
 console.log(refRegExp);
 type PTagInfo = { pTag: string, pageNumber: string };
-type BookRef = { book: string, pageNumber: string, location: string };
+type BookRef = { book: string, pageNumber?: string, location: string };
 type ChapterVerse = { chapter: string, verse?: string, note?: string };
+
+type ChapterRange = { start?: ChapterVerse, end?: ChapterVerse, alternate?: string };
+
 type ContiguousRef = {
   book: string,
-  pageNumber: string,
-  start?: ChapterVerse,
-  end?: ChapterVerse
-};
+  pageNumbers: string[],
+} & ChapterRange;
+
+type MergedContigousRef = {
+  book: string,
+  pageNumbers: string[],
+  ranges: ChapterRange[]
+}
 
 export function readRefsAndCombineWithPrevious(fileName: string = './src/input.html') {
   const readRefs =
-    // [] ||
+    [] ||
     readAndOutputScriptRefs(fileName);
   const previousRefs = parseJohnsIndex();
   const allRefs = _.groupBy(_.flatten([..._.values(readRefs), ..._.values(previousRefs)]), 'book');
@@ -34,13 +41,15 @@ export function readRefsAndCombineWithPrevious(fileName: string = './src/input.h
     return {
       ...accum,
       [book]: _.flatten(refs.map((ref): ContiguousRef[] => {
-        const { location, ...rest } = ref;
+        const { location, pageNumber, ...rest } = ref;
         // const locations = location ? location.split(new RegExp(locSeparator)) : undefined;
-        const definitelyIndependentLocations = location.split(';');
+        const [nonBracket, bracket] = location.split('[');
+        const alternates: Array<string | undefined> = bracket ? bracket.slice(0, bracket.length - 1).split(',') : []
+        const definitelyIndependentLocations = nonBracket.split(';');
         const nonRelativeLocations = _.flatten(definitelyIndependentLocations.map((location) => {
           const maybeDependentLocations = location.split(',');
           let previousChVs: ChapterVerse | undefined;
-          return maybeDependentLocations.map((loc): { start?: ChapterVerse, end?: ChapterVerse } => {
+          return maybeDependentLocations.map((loc, idx): ChapterRange => {
             const [startLoc, endLoc] = loc.split(new RegExp(hyphen));
             if (!startLoc) {
               return {
@@ -48,6 +57,7 @@ export function readRefsAndCombineWithPrevious(fileName: string = './src/input.h
                 end: undefined
               }
             }
+            const alternate = alternates[idx];
             const specs = parseSpecs(startLoc);
             const endSpecs = endLoc ?
               parseSpecs(endLoc) :
@@ -60,12 +70,14 @@ export function readRefsAndCombineWithPrevious(fileName: string = './src/input.h
             return {
               start,
               end,
+              alternate,
             }
           })
         }));
         return nonRelativeLocations.map((loc) => {
           return {
             ...rest,
+            pageNumbers: _.compact([pageNumber]),
             ...loc,
           }
         })
@@ -81,9 +93,88 @@ export function readRefsAndCombineWithPrevious(fileName: string = './src/input.h
           toSpecs(ref1.end),
           toSpecs(ref2.end),
         )
-      })
+      }).reduce((accum, ref) => {
+        const previous = accum[accum.length - 1] as ContiguousRef | undefined;
+        // TODO: maybe check alternate equality and throw error if unequl when range equal
+        if (previous && _.isEqual(previous.start, ref.start) && _.isEqual(previous.end, ref.end)) {
+          return [
+            ...accum.slice(0, accum.length - 1),
+            {
+              ...previous,
+              ...ref,
+              pageNumbers: [
+                ...previous.pageNumbers,
+                ...ref.pageNumbers,
+              ]
+            }
+          ]
+        }
+        return [
+          ...accum,
+          ref
+        ]
+      }, [] as ContiguousRef[]).map((ref) => {
+        return {
+          ...ref,
+          pageNumbers: _.sortBy(ref.pageNumbers, (pageNumberStr) => {
+            const match = pageNumberStr.match(/^\d+/);
+            if (!match) {
+              throw new Error(`shouldn't have an undefined page`);
+            }
+            return match[0];
+          })
+        }
+      }).reduce((accum, ref) => {
+        const previous = accum[accum.length - 1] as MergedContigousRef | undefined;
+        const { start, end, alternate, ...rest } = ref;
+        const refRange = {
+          start,
+          end,
+          alternate,
+        }
+        if (previous && _.isEqual(previous.pageNumbers, ref.pageNumbers)) {
+          return [
+            ...accum.slice(0, accum.length - 1),
+            {
+              ...previous,
+              ranges: [
+                ...previous.ranges,
+                refRange
+              ]
+            }
+          ]
+        }
+        return [
+          ...accum,
+          {
+            ...rest,
+            ranges: refRange.start && [refRange] || []
+          }
+        ]
+      }, [] as MergedContigousRef[])
+
     }
-  }, {})
+  }, {} as Record<string, MergedContigousRef[]>);
+  const contiguousRefsInOrderByBook = _.reduce(sortedAllRefs, (accum, refs) => [...accum, ...refs], [])
+  const newIndex = contiguousRefsInOrderByBook.map(({ ranges, book, pageNumbers }, idx) =>
+    `${ranges.length > 0 ?
+      printRanges(ranges) :
+      '\n' + book}    ${pageNumbers.join(', ') || ''}`
+  ).join('\n');
+  fs.writeFileSync(`${__dirname}/../src/generatedIndex.txt`, newIndex.trim());
+}
+
+function printRanges(ranges: ChapterRange[]) {
+  const alternates = _.compact(ranges.map(r => r.alternate));
+  return `${_.compact(ranges.map(({ start, end }) => printRange(start, end))).join('; ')}${alternates.length > 0 ? ' [' + alternates.join(', ') + ']' : ''}`;
+}
+
+function printRange(start: ChapterVerse | undefined, end: ChapterVerse | undefined) {
+  return start ? `${chapterVerseToString(start)}${end ? '-' + chapterVerseToString(end) : ''}` : undefined
+}
+
+function chapterVerseToString({ chapter, verse, note }: ChapterVerse) {
+  return `${chapter}${verse ? ':' + verse : ''}${note ? '.' + note : ''}`;
 }
 
 function parseSpecs(loc: string): string[] {
@@ -101,9 +192,10 @@ function toSpecs(chVs?: ChapterVerse) {
 function compareSpecs(s1: Array<string | undefined>, s2: Array<string | undefined>): number {
   const first = s1[0];
   const second = s2[0];
-  if (!first && !second) {
-    return 0;
-  }
+  if (first === '4:74:14' && second === '419')
+    if (!first && !second) {
+      return 0;
+    }
   if (!first) {
     return -1;
   }
@@ -270,10 +362,12 @@ function parseBookInfosFromLine(line: string, _book: string | undefined): { book
   const pages = getAllFromMatches(PAGE_REG_EX, pagesText, (match) => match[0]);
   // console.log(line, location, pages);
   return {
-    book, bookInfos: pages.map(pageNumber => ({
-      location,
-      book,
-      pageNumber,
-    }))
+    book, bookInfos: pages.length === 0 ?
+      [{ location, book, }]
+      : pages.map(pageNumber => ({
+        location,
+        book,
+        pageNumber,
+      }))
   };
 }
