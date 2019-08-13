@@ -1,5 +1,5 @@
 {
-  "name": "@creditiq/script-script",
+  "name": "scriptural",
   "version": "1.0.1",
   "main": "dist/index.js",
   "scripts": {
