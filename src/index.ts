@@ -8,7 +8,7 @@ const hyphensOrComma = `\\, ?|-|–|—|−`;
 const locationRegExStr = `(\\d+[:\.]\\d+|\\d+|${hyphensOrComma})+` // please note that the hyphens are actually different characters
 
 // Gen 1, 4, 7 // Gen 1:4, 5:3 // Gen 1:4, 5 //Gen 1, 5:3
-const refRegExp = new RegExp(`(${targets.map(t => escapeRegex(t)).join('|')}) (${locationRegExStr})( \\[${locationRegExStr}\\])?`, 'g');
+const refRegExp = new RegExp(`(${targets.map(t => escapeRegex(t)).join('|')})( (${locationRegExStr})( \\[${locationRegExStr}\\])?)`, 'g');
 console.log(refRegExp);
 type PTagInfo = { pTag: string, pageNumber: string };
 
@@ -70,3 +70,6 @@ function escapeRegex(text: string) {
   return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 };
 
+function parseJohnsIndex() {
+  const scriptureIndexText = fs.readFileSync(`${__dirname}/../src/scripture-index.txt`).toString();
+}
