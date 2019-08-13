@@ -85,10 +85,10 @@ export function readRefsAndCombineWithPrevious(fileName: string = './src/input.h
             {
               ...previous,
               ...ref,
-              pageNumbers: [
+              pageNumbers: _.uniq([
                 ...previous.pageNumbers,
                 ...ref.pageNumbers,
-              ]
+              ])
             }
           ];
         }
