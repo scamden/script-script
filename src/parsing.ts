@@ -20,10 +20,6 @@ const targetRegExStr = makeRegExFromTargets(targets);
 const refRegExp = new RegExp(`((${targetRegExStr}( (${locationRegExStr})( \\[${locationRegExStr}\\])?))|\\b${makeRegExFromTargets(targetsSansDaniel)}\\b)`, 'g');
 console.log(refRegExp);
 
-function readTargets() {
-
-}
-
 export function readAndOutputScriptRefs(fileName: string = './src/input.html', pageStart: number = 98) {
   const fileText = fs.readFileSync(fileName).toString();
 
