@@ -1,0 +1,381 @@
+[{
+    "book": "Genesis",
+    "abbrev": "Gen"
+  },
+  {
+    "book": "Exodus",
+    "abbrev": "Exod"
+  },
+  {
+    "book": "Leviticus",
+    "abbrev": "Lev"
+  },
+  {
+    "book": "Numbers",
+    "abbrev": "Num"
+  },
+  {
+    "book": "Deuteronomy",
+    "abbrev": "Deut"
+  },
+  {
+    "book": "Joshua",
+    "abbrev": "Josh"
+  },
+  {
+    "book": "Judges",
+    "abbrev": "Judg"
+  },
+  {
+    "book": "Ruth",
+    "abbrev": "Ruth"
+  },
+  {
+    "book": "1 Samuel",
+    "abbrev": "1 Sam"
+  },
+  {
+    "book": "2 Samuel",
+    "abbrev": "2 Sam"
+  },
+  {
+    "book": "1 Kings",
+    "abbrev": "1 Kgs"
+  },
+  {
+    "book": "2 Kings",
+    "abbrev": "2 Kgs"
+  },
+  {
+    "book": "1 Chronicles",
+    "abbrev": "1 Chr"
+  },
+  {
+    "book": "2 Chronicles",
+    "abbrev": "2 Chr"
+  },
+  {
+    "book": "Ezra",
+    "abbrev": "Ezra"
+  },
+  {
+    "book": "Nehemiah",
+    "abbrev": "Neh"
+  },
+  {
+    "book": "Esther",
+    "abbrev": "Esth"
+  },
+  {
+    "book": "Job",
+    "abbrev": "Job"
+  },
+  {
+    "book": "Psalm",
+    "abbrev": "Ps"
+  },
+  {
+    "book": "Psalms",
+    "abbrev": "Pss"
+  },
+  {
+    "book": "Proverbs",
+    "abbrev": "Prov"
+  },
+  {
+    "book": "Ecclesiastes",
+    "abbrev": "Ecc"
+  },
+  {
+    "book": "Song of Songs",
+    "abbrev": "Song"
+  },
+  {
+    "book": "Isaiah",
+    "abbrev": "Isa"
+  },
+  {
+    "book": "Jeremiah",
+    "abbrev": "Jer"
+  },
+  {
+    "book": "Lamentations",
+    "abbrev": "Lam"
+  },
+  {
+    "book": "Ezekiel",
+    "abbrev": "Ezek"
+  },
+  {
+    "book": "Daniel",
+    "abbrev": "Dan"
+  },
+  {
+    "book": "Hosea",
+    "abbrev": "Hos"
+  },
+  {
+    "book": "Joel",
+    "abbrev": "Joel"
+  },
+  {
+    "book": "Amos",
+    "abbrev": "Amos"
+  },
+  {
+    "book": "Obadiah",
+    "abbrev": "Obad"
+  },
+  {
+    "book": "Jonah",
+    "abbrev": "Jonah"
+  },
+  {
+    "book": "Micah",
+    "abbrev": "Mic"
+  },
+  {
+    "book": "Nahum",
+    "abbrev": "Nah"
+  },
+  {
+    "book": "Habakkuk",
+    "abbrev": "Hab"
+  },
+  {
+    "book": "Zephaniah",
+    "abbrev": "Zeph"
+  },
+  {
+    "book": "Haggai",
+    "abbrev": "Hag"
+  },
+  {
+    "book": "Zechariah",
+    "abbrev": "Zech"
+  },
+  {
+    "book": "Malachi",
+    "abbrev": "Mal"
+  },
+  {
+    "book": "Matthew",
+    "abbrev": "Matt"
+  },
+  {
+    "book": "Mark",
+    "abbrev": "Mark"
+  },
+  {
+    "book": "Luke",
+    "abbrev": "Luke"
+  },
+  {
+    "book": "John",
+    "abbrev": "John"
+  },
+  {
+    "book": "Acts",
+    "abbrev": "Acts"
+  },
+  {
+    "book": "Romans",
+    "abbrev": "Rom"
+  },
+  {
+    "book": "1 Corinthians",
+    "abbrev": "1 Cor"
+  },
+  {
+    "book": "2 Corinthians",
+    "abbrev": "2 Cor"
+  },
+  {
+    "book": "Galatians",
+    "abbrev": "Gal"
+  },
+  {
+    "book": "Ephesians",
+    "abbrev": "Eph"
+  },
+  {
+    "book": "Philippians",
+    "abbrev": "Phil"
+  },
+  {
+    "book": "Colossians",
+    "abbrev": "Col"
+  },
+  {
+    "book": "1 Thessalonians",
+    "abbrev": "1 Thess"
+  },
+  {
+    "book": "2 Thessalonians",
+    "abbrev": "2 Thess"
+  },
+  {
+    "book": "1 Timothy",
+    "abbrev": "1 Tim"
+  },
+  {
+    "book": "2 Timothy",
+    "abbrev": "2 Tim"
+  },
+  {
+    "book": "Titus",
+    "abbrev": "Titus"
+  },
+  {
+    "book": "Philemon",
+    "abbrev": "Phlm"
+  },
+  {
+    "book": "Hebrews",
+    "abbrev": "Heb"
+  },
+  {
+    "book": "James",
+    "abbrev": "Jas"
+  },
+  {
+    "book": "1 Peter",
+    "abbrev": "1 Pet"
+  },
+  {
+    "book": "2 Peter",
+    "abbrev": "2 Pet"
+  },
+  {
+    "book": "1 John",
+    "abbrev": "1 John"
+  },
+  {
+    "book": "2 John",
+    "abbrev": "2 John"
+  },
+  {
+    "book": "3 John",
+    "abbrev": "3 John"
+  },
+  {
+    "book": "Jude",
+    "abbrev": "Jude"
+  },
+  {
+    "book": "Revelation",
+    "abbrev": "Rev"
+  },
+  {
+    "book": "Tobit",
+    "abbrev": "Tob"
+  },
+  {
+    "book": "Judith",
+    "abbrev": "Jdt"
+  },
+  {
+    "book": "Wisdom of Solomon",
+    "abbrev": "Wis"
+  },
+  {
+    "book": "Sirach",
+    "abbrev": "Sir"
+  },
+  {
+    "book": "Ecclesiasticus",
+    "abbrev": "Sir"
+  },
+  {
+    "book": "1 Maccabees",
+    "abbrev": "1 Macc"
+  },
+  {
+    "book": "2 Maccabees",
+    "abbrev": "2 Macc"
+  },
+  {
+    "book": "3 Maccabees",
+    "abbrev": "3 Macc"
+  },
+  {
+    "book": "4 Maccabees",
+    "abbrev": "4 Macc"
+  },
+  {
+    "book": "5 Maccabees",
+    "abbrev": "5 Macc"
+  },
+  {
+    "book": "6 Maccabees",
+    "abbrev": "6 Macc"
+  },
+  {
+    "book": "7 Maccabees",
+    "abbrev": "7 Macc"
+  },
+  {
+    "book": "8 Maccabees",
+    "abbrev": "8 Macc"
+  },
+  {
+    "book": "1 Esdras",
+    "abbrev": "1 Esd"
+  },
+  {
+    "book": "2 Esdras",
+    "abbrev": "2 Esd"
+  },
+  {
+    "book": "Baruch",
+    "abbrev": "Bar."
+  },
+  {
+    "book": "1 Enoch",
+    "abbrev": "1 En."
+  },
+  {
+    "book": "2 Enoch",
+    "abbrev": "2 En."
+  },
+  {
+    "book": "3 Enoch",
+    "abbrev": "3 En."
+  },
+  {
+    "book": "Jubilees",
+    "abbrev": "Jub"
+  },
+  {
+    "book": "Sibylline Oracles",
+    "abbrev": "Sib. Or."
+  },
+  {
+    "book": "Testament of Dan",
+    "abbrev": "T. Dan."
+  },
+  {
+    "book": "Testament of Joseph",
+    "abbrev": "T. Jos."
+  },
+  {
+    "book": "Testament of Judah",
+    "abbrev": "T. Jud."
+  },
+  {
+    "book": "Testament of Levi",
+    "abbrev": "T. Levi"
+  },
+  {
+    "book": "Testament of Reuben",
+    "abbrev": "T. Reu."
+  },
+  {
+    "book": "Testament of Abraham",
+    "abbrev": "T. Ab."
+  },
+  {
+    "book": "Testament of Moses",
+    "abbrev": "T. Mos."
+  }
+]

@@ -16,6 +16,7 @@ Ezra
 Nehemiah
 Esther
 Job
+Psalm
 Psalms
 Proverbs
 Ecclesiastes
@@ -37,7 +38,6 @@ Zephaniah
 Haggai
 Zechariah
 Malachi
-
 Matthew
 Mark
 Luke
@@ -51,7 +51,7 @@ Ephesians
 Philippians
 Colossians
 1 Thessalonians
-1 Thessalonians
+2 Thessalonians
 1 Timothy
 2 Timothy
 Titus
@@ -65,13 +65,11 @@ James
 3 John
 Jude
 Revelation
-
 Tobit
 Judith
 Wisdom of Solomon
 Sirach
 Ecclesiasticus
-Baruch
 1 Maccabees
 2 Maccabees
 3 Maccabees
@@ -82,7 +80,6 @@ Baruch
 8 Maccabees
 1 Esdras
 2 Esdras
-
 Baruch
 1 Enoch
 2 Enoch
@@ -96,6 +93,10 @@ Testament of Levi
 Testament of Reuben
 Testament of Abraham
 Testament of Moses
+
+
+
+
 
 Gen
 Exod
@@ -137,7 +138,6 @@ Zeph
 Hag
 Zech
 Mal
-
 Matt
 Mark
 Luke
@@ -165,12 +165,11 @@ Jas
 3 John
 Jude
 Rev
-
 Tob
 Jdt
 Wis
 Sir
-Bar
+Sir
 1 Macc
 2 Macc
 3 Macc
@@ -181,9 +180,10 @@ Bar
 8 Macc
 1 Esd
 2 Esd
-
 Bar.
-En.
+1 En.
+2 En.
+3 En.
 Jub
 Sib. Or.
 T. Dan.

@@ -2,7 +2,22 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 import { readAndOutputScriptRefs } from './parsing';
 import { parseJohnsIndex } from './readIndex';
-import { hyphen, specSeparator } from './util';
+import * as targetList from './targets.json';
+import { BookRef, hyphen, specSeparator } from './util';
+
+const abbrevToBookName = targetList.reduce((accum, { abbrev, book }) => {
+  return {
+    ...accum,
+    [abbrev]: book
+  };
+}, {} as Record<string, string>);
+
+const bookNameToSortOrder = targetList.reduce((accum, { abbrev, book }, idx) => {
+  return {
+    ...accum,
+    [book]: idx,
+  };
+}, {} as Record<string, number>);
 
 type ChapterVerse = { chapter: string, verse?: string, note?: string };
 
@@ -24,127 +39,180 @@ export function readRefsAndCombineWithPrevious(fileName: string = './src/input.h
     // [] ||
     readAndOutputScriptRefs(fileName);
   const previousRefs = parseJohnsIndex();
-  const allRefs = _.groupBy(_.flatten([..._.values(readRefs), ..._.values(previousRefs)]), 'book');
+  const allRefs = _.groupBy(
+    standardizeBookNames(
+      _.flatten(
+        [..._.values(readRefs), ..._.values(previousRefs)]
+      )
+    ), 'book');
   const sortedAllRefs = _.reduce(allRefs, (bookAccum, refs, book) => {
+    const processedRefs = _.chain(refs)
+      .thru(ensureAtLeastOneEmpty)
+      .thru(absolutifyLocations)
+      .thru(sortContiguousRefs)
+      .thru(combinePageNumbersForExactLocationMatches)
+      .thru(sortPageNumbers)
+      .thru(mergeRangesForExactContiguousPageNumberMatches)
+      .value();
     return {
       ...bookAccum,
-      [book]: _.flatten(refs.map((ref): ContiguousRef[] => {
-        const { location: _location, pageNumber, ...rest } = ref;
-        const [nonBracket, bracket] = _location.split('[');
-        const alternates: Array<string | undefined> = bracket ? bracket.slice(0, bracket.length - 1).split(',') : [];
-        const definitelyIndependentLocations = nonBracket.split(';');
-        const nonRelativeLocations = _.flatten(definitelyIndependentLocations.map((location) => {
-          const maybeDependentLocations = location.split(',');
-          let previousChVs: ChapterVerse | undefined;
-          return maybeDependentLocations.map((loc, idx): ChapterRange => {
-            const [startLoc, endLoc] = loc.split(new RegExp(hyphen));
-            if (!startLoc) {
-              return {
-                start: undefined,
-                end: undefined
-              };
-            }
-            const alternate = alternates[idx];
-            const { relative, chVs: start } = getAbsoluteOrRelativeFromPrevious(previousChVs, startLoc);
-            const end = endLoc ?
-              getAbsoluteOrRelativeFromPrevious(!relative ? start : previousChVs, endLoc).chVs :
-              undefined;
-            previousChVs = start;
-            return {
-              start,
-              end,
-              alternate,
-            };
-          });
-        }));
-        return nonRelativeLocations.map((loc) => {
+      [book]: processedRefs,
+
+    };
+  }, {} as Record<string, MergedContigousRef[]>);
+
+  const contiguousRefsInOrderByBook = _.flatten(_.sortBy(
+    _.values(sortedAllRefs),
+    (refs) => refs[0] ? bookNameToSortOrder[refs[0].book] : Infinity
+  ));
+  const newIndex = contiguousRefsInOrderByBook.map(({ ranges, book, pageNumbers }, idx) => {
+    const bookIndexLine = `${ranges.length > 0 ?
+      printRanges(ranges) :
+      '\n' + book}    ${pageNumbers.join(', ') || ''}`;
+    return bookIndexLine;
+  }
+  ).join('\n');
+  fs.writeFileSync(`${__dirname}/../src/generatedIndex.txt`, newIndex.trim());
+}
+
+function standardizeBookNames(refs: BookRef[]) {
+  return refs.map((ref) => ({
+    ...ref,
+    book: abbrevToBookName[ref.book] || ref.book
+  }));
+}
+
+function ensureAtLeastOneEmpty(refs: BookRef[]) {
+  if (refs.length === 0 || refs.some((ref) => !ref.location)) {
+    return refs;
+  }
+  return [{ book: refs[0].book, location: '' }, ...refs];
+}
+
+function absolutifyLocations(refs: BookRef[]) {
+  return _.flatten(refs.map((ref): ContiguousRef[] => {
+    const { location: _location, pageNumber, ...rest } = ref;
+    const [nonBracket, bracket] = _location.split('[');
+    const alternates: Array<string | undefined> = bracket ? bracket.slice(0, bracket.length - 1).split(',') : [];
+    const definitelyIndependentLocations = nonBracket.split(';');
+    const nonRelativeLocations = _.flatten(definitelyIndependentLocations.map((location) => {
+      const maybeDependentLocations = location.split(',');
+      let previousChVs: ChapterVerse | undefined;
+      return maybeDependentLocations.map((loc, idx): ChapterRange => {
+        const [startLoc, endLoc] = loc.split(new RegExp(hyphen));
+        if (!startLoc) {
           return {
-            ...rest,
-            pageNumbers: _.compact([pageNumber]),
-            ...loc,
+            start: undefined,
+            end: undefined
           };
-        });
-      })).sort((ref1, ref2) => {
-        const startComp = compareSpecs(
-          toSpecs(ref1.start),
-          toSpecs(ref2.start),
-        );
-        if (startComp !== 0) {
-          return startComp;
         }
-        return compareSpecs(
-          toSpecs(ref1.end),
-          toSpecs(ref2.end),
-        );
-      }).reduce((accum, ref) => {
-        const previous = accum[accum.length - 1] as ContiguousRef | undefined;
-        // TODO: maybe check alternate equality and throw error if unequl when range equal
-        if (previous && _.isEqual(previous.start, ref.start) && _.isEqual(previous.end, ref.end)) {
-          return [
-            ...accum.slice(0, accum.length - 1),
-            {
-              ...previous,
-              ...ref,
-              pageNumbers: _.uniq([
-                ...previous.pageNumbers,
-                ...ref.pageNumbers,
-              ])
-            }
-          ];
-        }
-        return [
-          ...accum,
-          ref
-        ];
-      }, [] as ContiguousRef[]).map((ref) => {
+        const alternate = alternates[idx];
+        const { relative, chVs: start } = getAbsoluteOrRelativeFromPrevious(previousChVs, startLoc);
+        const end = endLoc ?
+          getAbsoluteOrRelativeFromPrevious(!relative ? start : previousChVs, endLoc).chVs :
+          undefined;
+        previousChVs = start;
         return {
-          ...ref,
-          pageNumbers: _.sortBy(ref.pageNumbers, (pageNumberStr) => {
-            const match = pageNumberStr.match(/^\d+/);
-            if (!match) {
-              throw new Error(`shouldn't have an undefined page`);
-            }
-            return match[0];
-          })
-        };
-      }).reduce((accum, ref) => {
-        const previous = accum[accum.length - 1] as MergedContigousRef | undefined;
-        const { start, end, alternate, ...rest } = ref;
-        const refRange = {
           start,
           end,
           alternate,
         };
-        if (previous && _.isEqual(previous.pageNumbers, ref.pageNumbers)) {
-          return [
-            ...accum.slice(0, accum.length - 1),
-            {
-              ...previous,
-              ranges: [
-                ...previous.ranges,
-                refRange
-              ]
-            }
-          ];
-        }
-        return [
-          ...accum,
-          {
-            ...rest,
-            ranges: refRange.start && [refRange] || []
-          }
-        ];
-      }, [] as MergedContigousRef[])
+      });
+    }));
+    return nonRelativeLocations.map((loc) => {
+      return {
+        ...rest,
+        pageNumbers: _.compact([pageNumber]),
+        ...loc,
+      };
+    });
+  }));
+}
 
+function sortContiguousRefs(refs: ContiguousRef[]) {
+  return _.slice(refs).sort((ref1, ref2) => {
+    const startComp = compareSpecs(
+      toSpecs(ref1.start),
+      toSpecs(ref2.start),
+    );
+    if (startComp !== 0) {
+      return startComp;
+    }
+    return compareSpecs(
+      toSpecs(ref1.end),
+      toSpecs(ref2.end),
+    );
+  });
+}
+
+function combinePageNumbersForExactLocationMatches(refs: ContiguousRef[]) {
+  return refs.reduce((accum, ref) => {
+    const previous = accum[accum.length - 1] as ContiguousRef | undefined;
+    // TODO: maybe check alternate equality and throw error if unequl when range equal
+    if (previous && _.isEqual(previous.start, ref.start) && _.isEqual(previous.end, ref.end)) {
+      return [
+        ...accum.slice(0, accum.length - 1),
+        {
+          ...previous,
+          ...ref,
+          pageNumbers: _.uniq([
+            ...previous.pageNumbers,
+            ...ref.pageNumbers,
+          ])
+        }
+      ];
+    }
+    return [
+      ...accum,
+      ref
+    ];
+  }, [] as ContiguousRef[]);
+}
+
+function sortPageNumbers(refs: ContiguousRef[]) {
+  return refs.map((ref) => {
+    return {
+      ...ref,
+      pageNumbers: _.sortBy(ref.pageNumbers, (pageNumberStr) => {
+        const match = pageNumberStr.match(/^\d+/);
+        if (!match) {
+          throw new Error(`shouldn't have an undefined page`);
+        }
+        return match[0];
+      })
     };
-  }, {} as Record<string, MergedContigousRef[]>);
-  const contiguousRefsInOrderByBook = _.reduce(sortedAllRefs, (accum, refs) => [...accum, ...refs], []);
-  const newIndex = contiguousRefsInOrderByBook.map(({ ranges, book, pageNumbers }, idx) =>
-    `${ranges.length > 0 ?
-      printRanges(ranges) :
-      '\n' + book}    ${pageNumbers.join(', ') || ''}`
-  ).join('\n');
-  fs.writeFileSync(`${__dirname}/../src/generatedIndex.txt`, newIndex.trim());
+  });
+}
+
+function mergeRangesForExactContiguousPageNumberMatches(refs: ContiguousRef[]) {
+  return refs.reduce((accum, ref) => {
+    const previous = accum[accum.length - 1] as MergedContigousRef | undefined;
+    const { start, end, alternate, ...rest } = ref;
+    const refRange = {
+      start,
+      end,
+      alternate,
+    };
+    if (previous && _.isEqual(previous.pageNumbers, ref.pageNumbers)) {
+      return [
+        ...accum.slice(0, accum.length - 1),
+        {
+          ...previous,
+          ranges: [
+            ...previous.ranges,
+            refRange
+          ]
+        }
+      ];
+    }
+    return [
+      ...accum,
+      {
+        ...rest,
+        ranges: refRange.start && [refRange] || []
+      }
+    ];
+  }, [] as MergedContigousRef[]);
 }
 
 function printRanges(ranges: ChapterRange[]) {

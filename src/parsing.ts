@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as _ from 'lodash';
+import * as targetList from './targets.json';
 import { BookRef, escapeRegex, getAllFromMatches, hyphen, specSeparator } from './util';
 
 const SECTIONS_REG_EX = /<p class="s19" style=".*?">.*?([0-9]+).*?<\/p>/g;
@@ -9,7 +10,7 @@ const hyphensOrComma = `${locSeparator} ?|${hyphen}`;
 const locationRegExStr = `(\\d+${specSeparator}\\d+|\\d+|${hyphensOrComma})+`;
 
 type PTagInfo = { pTag: string, pageNumber: string };
-const targets = readTargets();
+const targets = targetList.reduce((accum, targetObj) => [...accum, targetObj.book, targetObj.abbrev], []);
 const targetsSansDaniel = targets.filter((t) => t !== 'Daniel');
 // Gen 1, 4, 7 // Gen 1:4, 5:3 // Gen 1:4, 5 //Gen 1, 5:3
 // tslint:disable-next-line: max-line-length
@@ -20,8 +21,7 @@ const refRegExp = new RegExp(`((${targetRegExStr}( (${locationRegExStr})( \\[${l
 console.log(refRegExp);
 
 function readTargets() {
-  const fileText = fs.readFileSync(`${__dirname}/../src/targets.md`).toString();
-  return _.compact(fileText.split('\n'));
+
 }
 
 export function readAndOutputScriptRefs(fileName: string = './src/input.html', pageStart: number = 98) {

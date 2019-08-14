@@ -18,9 +18,8 @@
     "noUnusedParameters": false,
     "noUnusedLocals": false,
     "jsx": "react",
-    "plugins": [
-
-    ]
+    "resolveJsonModule": true,
+    "plugins": []
   },
   "compileOnSave": false,
   "include": [
